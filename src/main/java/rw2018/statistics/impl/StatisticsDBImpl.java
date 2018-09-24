@@ -17,6 +17,8 @@ import rw2018.statistics.utilities.NumberConversion;
  */
 public class StatisticsDBImpl implements StatisticsDB {
 
+	private static int MAX_BYTES = 3;
+	
 	private int numberOfChunks;
 
 	private File statisticsFile;
@@ -49,7 +51,7 @@ public class StatisticsDBImpl implements StatisticsDB {
 			throw new IllegalArgumentException("Illegal resource Id " + resourceId + ". Resource ids must be > 0.");
 		}
 		try {
-			long sizeOfRow = Long.BYTES * numberOfChunks * getTriplePositions().length;
+			long sizeOfRow = MAX_BYTES * numberOfChunks * getTriplePositions().length;
 			int indexOfTriplePosition = -1;
 			for (int i = 0; i < getTriplePositions().length; i++) {
 				if (getTriplePositions()[i] == triplePosition) {
@@ -62,12 +64,12 @@ public class StatisticsDBImpl implements StatisticsDB {
 								+ Arrays.toString(getTriplePositions()) + ".");
 			}
 			long offset = ((resourceId - 1) * sizeOfRow)
-					+ (((indexOfTriplePosition * numberOfChunks) + chunkNumber) * Long.BYTES);
+					+ (((indexOfTriplePosition * numberOfChunks) + chunkNumber) * MAX_BYTES);
 
 			statistics.seek(offset);
-			long value = 1;
+			int value = 1;
 			try {
-				value = statistics.readLong();
+				value = statistics.read(new byte[MAX_BYTES]);
 				value++;
 			} catch (EOFException e) {
 				// the resource did not exist in the file yet
@@ -75,7 +77,10 @@ public class StatisticsDBImpl implements StatisticsDB {
 			if (statistics.getFilePointer() != offset) {
 				statistics.seek(offset);
 			}
-			statistics.writeLong(value);
+			statistics.write(new byte[] {
+					(byte)(value & 0xFF), 
+					(byte)((value >>> 8) & 0xFF), 
+					(byte)((value >>> 16) & 0xFF)});
 		} catch (IOException e) {
 			close();
 			throw new RuntimeException(e);
@@ -88,7 +93,7 @@ public class StatisticsDBImpl implements StatisticsDB {
 			return -1;
 		}
 		try {
-			long sizeOfRow = Long.BYTES * numberOfChunks * getTriplePositions().length;
+			long sizeOfRow = MAX_BYTES * numberOfChunks * getTriplePositions().length;
 			int indexOfTriplePosition = -1;
 			int columnNumber = 0;
 			for (int i = 0; i < getTriplePositions().length; i++) {
@@ -104,11 +109,11 @@ public class StatisticsDBImpl implements StatisticsDB {
 						"The triple position " + triplePosition + " is not supported. Supported triple positions are "
 								+ Arrays.toString(getTriplePositions()) + ".");
 			}
-			long offset = ((resourceId - 1) * sizeOfRow) + ((columnNumber + chunkNumber) * Long.BYTES);
+			long offset = ((resourceId - 1) * sizeOfRow) + ((columnNumber + chunkNumber) * MAX_BYTES);
 
 			statistics.seek(offset);
 			try {
-				return statistics.readLong();
+				return statistics.read(new byte[MAX_BYTES]);
 			} catch (EOFException e) {
 				// the resource did not exist in the file yet
 				if (statistics.length() >= ((resourceId - 1) * sizeOfRow)) {
@@ -133,7 +138,7 @@ public class StatisticsDBImpl implements StatisticsDB {
 			return null;
 		}
 		try {
-			int sizeOfRow = Long.BYTES * numberOfChunks * getTriplePositions().length;
+			int sizeOfRow = MAX_BYTES * numberOfChunks * getTriplePositions().length;
 			long offset = (resourceId - 1) * sizeOfRow;
 
 			byte[] row = new byte[sizeOfRow];
@@ -143,9 +148,9 @@ public class StatisticsDBImpl implements StatisticsDB {
 				return null;
 			}
 
-			long[] result = new long[row.length / Long.BYTES];
+			long[] result = new long[row.length / MAX_BYTES];
 			for (int i = 0; i < result.length; i++) {
-				result[i] = NumberConversion.bytes2long(row, i * Long.BYTES);
+				result[i] = NumberConversion.bytes2long(row, i * MAX_BYTES);
 			}
 			return result;
 		} catch (IOException e) {

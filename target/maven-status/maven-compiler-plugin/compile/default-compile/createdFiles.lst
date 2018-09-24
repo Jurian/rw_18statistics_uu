@@ -1,0 +1,11 @@
+rw2018/statistics/Main.class
+rw2018/statistics/utilities/NumberConversion.class
+rw2018/statistics/io/EncodedFileInputStream.class
+rw2018/statistics/impl/StatisticsDBBaseImpl.class
+rw2018/statistics/io/EncodingFileFormat.class
+rw2018/statistics/io/Statement.class
+rw2018/statistics/impl/StatisticsDBImpl.class
+rw2018/statistics/io/EncodedFileOutputStream.class
+rw2018/statistics/StatisticsDB.class
+rw2018/statistics/TriplePosition.class
+rw2018/statistics/io/EncodedFileInputIterator.class

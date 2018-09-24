@@ -1,15 +1,10 @@
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-.settings/
-.classpath
-.project
-
-# Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
-!/.mvn/wrapper/maven-wrapper.jar
+data/chunk0.enc.gz
+data/chunk1.enc.gz
+data/chunk2.enc.gz
+data/chunk3.enc.gz
+data/chunk4.enc.gz
+data/chunk5.enc.gz
+data/chunk6.enc.gz
+data/chunk7.enc.gz
+data/chunk8.enc.gz
+data/chunk9.enc.gz

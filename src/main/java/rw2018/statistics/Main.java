@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import rw2018.statistics.impl.StatisticsDBBaseImpl;
+import rw2018.statistics.impl.StatisticsDBImpl;
 import rw2018.statistics.io.EncodedFileInputStream;
 import rw2018.statistics.io.EncodingFileFormat;
 import rw2018.statistics.io.Statement;
@@ -35,7 +35,7 @@ public class Main {
     }
 
     // TODO adjust to your implementation
-    try (StatisticsDB statisticsDB = new StatisticsDBBaseImpl();) {
+    try (StatisticsDB statisticsDB = new StatisticsDBImpl();) {
       statisticsDB.setUp(statisticsDir, chunks.length);
 
       for (int chunkI = 0; chunkI < chunks.length; chunkI++) {
@@ -53,6 +53,7 @@ public class Main {
           throw new RuntimeException(e);
         }
       }
+      statisticsDB.prettyPrint();
     }
   }
 
@@ -86,8 +87,9 @@ public class Main {
 
       File[] chunks = inputDir.listFiles();
       Arrays.sort(chunks);
+      long timeStart = System.currentTimeMillis();
       Main.collectStatistics(workingDir, chunks);
-
+      System.out.println("Running time: " + (System.currentTimeMillis() - timeStart) + "ms");
     } catch (ParseException e) {
       Main.printUsage(options);
       throw e;
