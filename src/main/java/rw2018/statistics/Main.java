@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import rw2018.statistics.impl.StatisticsDBBaseImpl;
 import rw2018.statistics.impl.StatisticsDBImpl;
 import rw2018.statistics.io.EncodedFileInputStream;
 import rw2018.statistics.io.EncodingFileFormat;
@@ -53,7 +54,7 @@ public class Main {
           throw new RuntimeException(e);
         }
       }
-      statisticsDB.prettyPrint();
+      //System.out.println(statisticsDB.prettyPrint());
     }
   }
 

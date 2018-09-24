@@ -17,7 +17,7 @@ import rw2018.statistics.utilities.NumberConversion;
  */
 public class StatisticsDBImpl implements StatisticsDB {
 
-	private static int MAX_BYTES = 3;
+	private static int MAX_BYTES = 2;
 	
 	private int numberOfChunks;
 
@@ -150,7 +150,8 @@ public class StatisticsDBImpl implements StatisticsDB {
 
 			long[] result = new long[row.length / MAX_BYTES];
 			for (int i = 0; i < result.length; i++) {
-				result[i] = NumberConversion.bytes2long(row, i * MAX_BYTES);
+				//result[i] = NumberConversion.bytes2long(row, i * MAX_BYTES);
+				result[i] = NumberConversion.bytes2short(row, i * MAX_BYTES);
 			}
 			return result;
 		} catch (IOException e) {
